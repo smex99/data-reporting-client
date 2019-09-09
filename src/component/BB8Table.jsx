@@ -19,7 +19,6 @@ import {
 	IconButton
 } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
-import NoteIcon from '@material-ui/icons/Note';
 import FileIcon from '@material-ui/icons/InsertDriveFile';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -136,12 +135,6 @@ export default function BB8Table() {
 		setFiltredData(filterdPrediction);
 	}
 
-	// async function getOriginalFileName(id) {
-	// 	const response = await axios.get(`/api/bb8/filename/${id}`);
-	// 	const { originalFileName } = response.data[0];
-	// 	alert(originalFileName);
-	// }
-
 	return (
 		<div className={classes.root}>
 			{!isLoading && (
@@ -195,7 +188,6 @@ export default function BB8Table() {
 										<TableCell key={item.id}>{item.label}</TableCell>
 									))}
 									<TableCell>Json</TableCell>
-									<TableCell>Filename</TableCell>
 									<TableCell>Image</TableCell>
 								</TableRow>
 							</TableHead>
@@ -228,16 +220,6 @@ export default function BB8Table() {
 													onClick={() => handleClickOpen(item.invoice_id)}
 												>
 													<CodeIcon />
-												</IconButton>
-											</TableCell>
-
-											<TableCell>
-												<IconButton
-													size='small'
-													color='primary'
-													// onClick={() => getOriginalFileName(item.invoice_id)}
-												>
-													<NoteIcon />
 												</IconButton>
 											</TableCell>
 

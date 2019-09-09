@@ -15,11 +15,10 @@ import {
 	IconButton
 } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
-import NoteIcon from '@material-ui/icons/Note';
 import FileIcon from '@material-ui/icons/InsertDriveFile';
-
 import { makeStyles } from '@material-ui/core/styles';
 import FocusDialog from './dialog/FocusDialog';
+import InvoiceImageDialog from './dialog/InvoiceImageDialog';
 
 const tableHeaders = [
 	{ id: 1, label: 'Invoice id' },
@@ -93,7 +92,7 @@ export default function FocusTable() {
 		setOpen(false);
 	}
 
-	function handleOpenImage() {
+	function handleOpenImage(id) {
 		setOpenImage(true);
 	}
 
@@ -118,12 +117,6 @@ export default function FocusTable() {
 	function filterPredictions(number) {
 		const filterdPrediction = data.filter(item => item.predictions === number);
 		setFiltredData(filterdPrediction);
-	}
-
-	async function getOriginalFileName(id) {
-		const response = await axios.get(`/api/bb8/filename/${id}`);
-		const { originalFileName } = response.data[0];
-		alert(originalFileName);
 	}
 
 	return (
@@ -171,7 +164,11 @@ export default function FocusTable() {
 											</TableCell>
 
 											<TableCell>
-												<IconButton size='small' color='primary'>
+												<IconButton
+													size='small'
+													color='primary'
+													onClick={() => handleOpenImage(item.invoice_id)}
+												>
 													<FileIcon />
 												</IconButton>
 											</TableCell>
@@ -206,6 +203,15 @@ export default function FocusTable() {
 				open={open}
 			>
 				<FocusDialog id={selectedId} />
+			</Dialog>
+
+			<Dialog
+				maxWidth='xl'
+				onClose={handleCloseImage}
+				open={openImage}
+				aria-labelledby='invoice-image'
+			>
+				<InvoiceImageDialog id={selectedId} onClose={handleCloseImage} />
 			</Dialog>
 		</div>
 	);

@@ -37,7 +37,7 @@ class BB8Dialogs extends React.Component {
 		return (
 			<>
 				<DialogTitle disableTypography>
-					<Typography variant='h6'>Json</Typography>
+					<Typography variant='h6'>Json Output</Typography>
 
 					<IconButton
 						aria-label='close'

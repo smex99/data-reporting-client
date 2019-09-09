@@ -34,7 +34,7 @@ export default function FocusDialogs({ id, onClose }) {
 	return (
 		<>
 			<DialogTitle disableTypography>
-				<Typography variant='h6'>Raw BB8 Json Output</Typography>
+				<Typography variant='h6'>Json Output</Typography>
 
 				<IconButton
 					aria-label='close'
