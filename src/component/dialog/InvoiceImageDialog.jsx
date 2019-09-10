@@ -20,19 +20,28 @@ const styles = theme => ({
 
 class InvoiceImageDialog extends React.Component {
 	state = {
+		isLoding: false,
 		originalFileName: ''
 	};
 
-	async componentWillMount() {
+	componentWillMount() {
 		const { id } = this.props;
-		const response = await axios.get(`/api/bb8/filename/${id}`);
-		const { originalFileName } = response.data[0];
-		this.setState({ originalFileName });
+		this.setState({
+			...this.state,
+			isLoding: true
+		});
+		axios
+			.get(`/api/bb8/filename/${id}`)
+			.then(response => {
+				const { originalFileName } = response.data[0];
+				this.setState({ originalFileName, isLoding: false });
+			})
+			.catch(error => console.log(error));
 	}
 
 	render() {
 		const { classes, onClose } = this.props;
-		const { originalFileName } = this.state;
+		const { isLoading, originalFileName } = this.state;
 
 		return (
 			<>
@@ -49,7 +58,7 @@ class InvoiceImageDialog extends React.Component {
 					</DialogTitle>
 
 					<DialogContent dividers style={{ height: 800 }}>
-						<img src={`/image/${originalFileName}`} alt='invoice-image' />
+						{isLoading && <img src={`/image/${originalFileName}`} alt='' />}
 					</DialogContent>
 				</div>
 			</>
