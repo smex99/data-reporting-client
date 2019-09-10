@@ -4,6 +4,10 @@ import {
 	Grid,
 	Paper,
 	Typography,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
 	Toolbar,
 	Dialog,
 	Table,
@@ -50,6 +54,9 @@ const useStyles = makeStyles(theme => ({
 	},
 	title: {
 		flex: '0 0 auto'
+	},
+	formControl: {
+		minWidth: 180
 	}
 }));
 
@@ -59,14 +66,15 @@ export default function FocusTable() {
 		axios
 			.get('/api/report')
 			.then(response => {
-				const result = response.data.map(data => ({
-					_id: data._id,
-					invoice_id: data.invoice_id,
-					metrics: data.metrics,
-					model_id: data.model_id,
-					nb_classes_predicted: data.nb_classes_predicted
-				}));
+				// const result = response.data.map(data => ({
+				// 	_id: data._id,
+				// 	invoice_id: data.invoice_id,
+				// 	metrics: data.metrics,
+				// 	model_id: data.model_id,
+				// 	nb_classes_predicted: data.nb_classes_predicted
+				// }));
 				setData(response.data);
+				setFiltredData(response.data);
 				setIsLoading(false);
 			})
 			.catch(error => console.log(error));
@@ -115,7 +123,9 @@ export default function FocusTable() {
 	}
 
 	function filterPredictions(number) {
-		const filterdPrediction = data.filter(item => item.predictions === number);
+		const filterdPrediction = data.filter(
+			item => item.nb_classes_predicted === number
+		);
 		setFiltredData(filterdPrediction);
 	}
 
@@ -124,13 +134,47 @@ export default function FocusTable() {
 			{!isLoading && (
 				<Paper className={classes.paper}>
 					<Toolbar>
-						<div className={classes.title}>
-							<Typography color='inherit' variant='subtitle1'>
-								Focus Reading Result
-							</Typography>
+						<Grid container direction='column' justify='center'>
+							<Grid item>
+								<div className={classes.title}>
+									<Typography color='inherit' variant='subtitle1'>
+										Focus Reading Result
+									</Typography>
 
-							<div className={classes.spacer} />
-						</div>
+									{/* <div className={classes.spacer} /> */}
+								</div>
+							</Grid>
+
+							<Grid item>
+								<FormControl className={classes.formControl}>
+									<InputLabel htmlFor='class-number'>
+										Class Predicted
+									</InputLabel>
+									<Select
+										value={classesNumber}
+										margin='dense'
+										onChange={handleChange}
+										inputProps={{
+											name: 'class-number',
+											id: 'class-number'
+										}}
+									>
+										<MenuItem value={0}>0</MenuItem>
+										<MenuItem value={1}>1</MenuItem>
+										<MenuItem value={2}>2</MenuItem>
+										<MenuItem value={3}>3</MenuItem>
+										<MenuItem value={4}>4</MenuItem>
+										<MenuItem value={5}>5</MenuItem>
+										<MenuItem value={6}>6</MenuItem>
+										<MenuItem value={7}>7</MenuItem>
+										<MenuItem value={8}>8</MenuItem>
+										<MenuItem value={9}>9</MenuItem>
+										<MenuItem value={10}>10</MenuItem>
+										<MenuItem value={11}>11</MenuItem>
+									</Select>
+								</FormControl>
+							</Grid>
+						</Grid>
 					</Toolbar>
 					<div className={classes.tableWrapper}>
 						<Table className={classes.table} size='small'>
@@ -145,7 +189,7 @@ export default function FocusTable() {
 							</TableHead>
 
 							<TableBody>
-								{data
+								{filtredData
 									.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 									.map(item => (
 										<TableRow hover key={item._id}>
@@ -202,7 +246,7 @@ export default function FocusTable() {
 				aria-labelledby='customized-dialog-title'
 				open={open}
 			>
-				<FocusDialog id={selectedId} />
+				<FocusDialog id={selectedId} onClose={handleCloseImage} />
 			</Dialog>
 
 			<Dialog

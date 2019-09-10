@@ -72,16 +72,15 @@ export default function BB8Table() {
 		axios
 			.get('/api/bb8')
 			.then(response => {
-				const result = response.data.map(data => ({
+				const mapResponse = response.data.map(data => ({
 					_id: data._id,
 					invoice_id: data.invoice_id,
 					metrics: data.metrics,
 					model_id: data.model_id,
 					predictions: data.predictions.length
 				}));
-				setData(result);
-				setFiltredData(result);
-
+				setData(mapResponse);
+				setFiltredData(mapResponse);
 				setIsLoading(false);
 			})
 			.catch(error => console.log(error));
@@ -140,7 +139,7 @@ export default function BB8Table() {
 			{!isLoading && (
 				<Paper className={classes.paper}>
 					<Toolbar>
-						<Grid container direction='column'>
+						<Grid container direction='column' justify='center'>
 							<Grid item>
 								<div className={classes.title}>
 									<Typography color='inherit' variant='subtitle1'>
@@ -152,7 +151,7 @@ export default function BB8Table() {
 							<Grid item>
 								<FormControl className={classes.formControl}>
 									<InputLabel htmlFor='class-number'>
-										Number of classes
+										Class Predicted
 									</InputLabel>
 									<Select
 										value={classesNumber}
