@@ -224,7 +224,7 @@ export default function FocusTable() {
 						<TablePagination
 							rowsPerPageOptions={[10, 25, 50]}
 							component='div'
-							count={data.length}
+							count={filtredData.length}
 							rowsPerPage={rowsPerPage}
 							page={page}
 							backIconButtonProps={{
@@ -246,7 +246,7 @@ export default function FocusTable() {
 				aria-labelledby='customized-dialog-title'
 				open={open}
 			>
-				<FocusDialog id={selectedId} onClose={handleCloseImage} />
+				<FocusDialog id={selectedId} onClose={handleClose} />
 			</Dialog>
 
 			<Dialog
