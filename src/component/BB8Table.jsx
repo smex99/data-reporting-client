@@ -7,6 +7,7 @@ import {
 	Typography,
 	FormControl,
 	InputLabel,
+	Input,
 	Select,
 	MenuItem,
 	Toolbar,
@@ -20,9 +21,7 @@ import {
 } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
 import FileIcon from '@material-ui/icons/InsertDriveFile';
-
 import { makeStyles } from '@material-ui/core/styles';
-
 import BB8Dialog from '../component/dialog/BB8Dialog';
 import InvoiceImageDialog from '../component/dialog/InvoiceImageDialog';
 
@@ -61,7 +60,8 @@ const useStyles = makeStyles(theme => ({
 		flex: '0 0 auto'
 	},
 	formControl: {
-		minWidth: 180
+		minWidth: 180,
+		margin: theme.spacing(1)
 	},
 	selectEmpty: {}
 }));
@@ -88,6 +88,7 @@ export default function BB8Table() {
 
 	const classes = useStyles();
 	const [isLoading, setIsLoading] = useState(false);
+	const [search, setSearch] = useState('');
 	const [data, setData] = useState([]); // Describe the state shape of response data object
 	const [filtredData, setFiltredData] = useState([]);
 	const [page, setPage] = useState(0);
@@ -127,6 +128,13 @@ export default function BB8Table() {
 	function handleChange(event) {
 		setClassesNumber(event.target.value);
 		filterPredictions(event.target.value);
+	}
+
+	function handleChangeSearch(event) {
+		setSearch(event.target.value);
+
+		const filtred = data.filter(item => item.invoice_id.match(event.target.value))
+		setFiltredData(filtred)
 	}
 
 	function filterPredictions(number) {
@@ -175,6 +183,11 @@ export default function BB8Table() {
 										<MenuItem value={10}>10</MenuItem>
 										<MenuItem value={11}>11</MenuItem>
 									</Select>
+								</FormControl>
+
+								<FormControl className={classes.formControl}>
+										<InputLabel htmlFor='search'>Search invoice_id</InputLabel>
+										<Input name='search' value={search} margin='dense' onChange={handleChangeSearch}/>
 								</FormControl>
 							</Grid>
 						</Grid>
@@ -256,9 +269,9 @@ export default function BB8Table() {
 			)}
 
 			<Dialog
-				maxWidth='lg'
+				maxWidth='xl'
 				onClose={handleClose}
-				aria-labelledby='raw-json-dialog'
+				aria-labelledby='json-output'
 				open={open}
 			>
 				<BB8Dialog id={selectedId} onClose={handleClose} />

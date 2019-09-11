@@ -6,6 +6,7 @@ import {
 	Typography,
 	FormControl,
 	InputLabel,
+	Input,
 	Select,
 	MenuItem,
 	Toolbar,
@@ -56,7 +57,8 @@ const useStyles = makeStyles(theme => ({
 		flex: '0 0 auto'
 	},
 	formControl: {
-		minWidth: 180
+		minWidth: 180,
+		margin: theme.spacing(1)
 	}
 }));
 
@@ -66,13 +68,6 @@ export default function FocusTable() {
 		axios
 			.get('/api/report')
 			.then(response => {
-				// const result = response.data.map(data => ({
-				// 	_id: data._id,
-				// 	invoice_id: data.invoice_id,
-				// 	metrics: data.metrics,
-				// 	model_id: data.model_id,
-				// 	nb_classes_predicted: data.nb_classes_predicted
-				// }));
 				setData(response.data);
 				setFiltredData(response.data);
 				setIsLoading(false);
@@ -82,6 +77,7 @@ export default function FocusTable() {
 
 	const classes = useStyles();
 	const [isLoading, setIsLoading] = useState(false);
+	const [search, setSearch] = useState('')
 	const [data, setData] = useState([]);
 	const [filtredData, setFiltredData] = useState([]);
 	const [page, setPage] = useState(0);
@@ -102,6 +98,7 @@ export default function FocusTable() {
 
 	function handleOpenImage(id) {
 		setOpenImage(true);
+		setSelectedId(id)
 	}
 
 	function handleCloseImage() {
@@ -115,6 +112,13 @@ export default function FocusTable() {
 
 	function handleChangePage(event, newPage) {
 		setPage(newPage);
+	}
+
+	function handleChangeSearch(event) {
+		setSearch(event.target.value);
+
+		const filtred = data.filter(item => item.invoice_id.match(event.target.value))
+		setFiltredData(filtred)
 	}
 
 	function handleChangeRowsPerPage(event) {
@@ -172,6 +176,11 @@ export default function FocusTable() {
 										<MenuItem value={10}>10</MenuItem>
 										<MenuItem value={11}>11</MenuItem>
 									</Select>
+								</FormControl>
+
+								<FormControl className={classes.formControl}>
+										<InputLabel htmlFor='search'>Search by id</InputLabel>
+										<Input name='search' value={search} margin='dense' onChange={handleChangeSearch}/>
 								</FormControl>
 							</Grid>
 						</Grid>
@@ -241,9 +250,9 @@ export default function FocusTable() {
 			)}
 
 			<Dialog
-				maxWidth='lg'
+				maxWidth='xl'
 				onClose={handleClose}
-				aria-labelledby='customized-dialog-title'
+				aria-labelledby='json-output'
 				open={open}
 			>
 				<FocusDialog id={selectedId} onClose={handleClose} />

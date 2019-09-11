@@ -31,7 +31,7 @@ class InvoiceImageDialog extends React.Component {
 			isLoding: true
 		});
 		axios
-			.get(`/api/bb8/filename/${id}`)
+			.get(`/api/report/filename/${id}`)
 			.then(response => {
 				const { originalFileName } = response.data[0];
 				this.setState({ originalFileName, isLoding: false });
@@ -39,9 +39,13 @@ class InvoiceImageDialog extends React.Component {
 			.catch(error => console.log(error));
 	}
 
+	componentWillUnmount() {
+		this.setState({isLoding: false, originalFileName: ''})
+	}
+
 	render() {
 		const { classes, onClose } = this.props;
-		const { isLoading, originalFileName } = this.state;
+		const { originalFileName } = this.state;
 
 		return (
 			<>
@@ -57,8 +61,8 @@ class InvoiceImageDialog extends React.Component {
 						</IconButton>
 					</DialogTitle>
 
-					<DialogContent dividers style={{ height: 800 }}>
-						{isLoading && <img src={`/image/${originalFileName}`} alt='' />}
+					<DialogContent dividers>
+						<img src={`/image/${originalFileName}`} alt='' width='1200' height='auto' />
 					</DialogContent>
 				</div>
 			</>
