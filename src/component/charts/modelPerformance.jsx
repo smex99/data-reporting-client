@@ -39,7 +39,7 @@ export default function ModelPerformance() {
 
 	return (
 		<div className={classes.root}>
-			<Paper className={classes.paper}>
+			<Paper className={classes.paper} elevation={0}>
 				<Toolbar>
 					<div className={classes.title}>
 						<Typography color='inherit' variant='subtitle1'>

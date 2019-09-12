@@ -41,7 +41,7 @@ class BB8ModelPerformance extends React.Component {
 
 		return (
 			<div className={classes.root}>
-				<Paper className={classes.paper}>
+				<Paper className={classes.paper} elevation={0}>
 					<Toolbar>
 						<div className={classes.title}>
 							<Typography color='inherit' variant='subtitle1'>
@@ -56,9 +56,8 @@ class BB8ModelPerformance extends React.Component {
 							labels: ['min_time', 'max_time', 'avg_time'],
 							datasets: [
 								{
-									label: '# Nb classes',
+									label: '# Execution time (ms)',
 									data: [min_time, max_time, avg_time],
-									fill: false,
 									backgroundColor: [
 										'rgba(255, 99, 132)',
 										'rgba(54, 162, 235)',
@@ -71,22 +70,7 @@ class BB8ModelPerformance extends React.Component {
 									],
 									borderWidth: 1
 								}
-							],
-							options: {
-								scales: {
-									xAxes: [
-										{
-											barPercentage: 0.5,
-											barThickness: 6,
-											maxBarThickness: 8,
-											minBarLength: 2,
-											gridLines: {
-												offsetGridLines: true
-											}
-										}
-									]
-								}
-							}
+							]
 						}}
 					/>
 				</Paper>

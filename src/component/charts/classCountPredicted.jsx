@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import axios from 'axios';
-import { Bubble } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { Paper, Toolbar, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
 	root: {
 		width: '100%',
 		marginTop: theme.spacing(3)
@@ -23,50 +23,92 @@ const useStyles = makeStyles(theme => ({
 	title: {
 		flex: '0 0 auto'
 	}
-}));
+});
 
-export default function ClassCountPredicted() {
-	useEffect(() => {
+class ClassCountPredicted extends React.Component {
+	state = {
+		data: [],
+		dataCount: []
+	};
+
+	componentDidMount() {
 		axios
-			.get('/api/metrics/count')
-			.then(response => setPerf(response.data[0]))
+			.get('/api/report/count')
+			.then(response => {
+				this.setState({ data: response.data });
+				this.handleGetClassesNumber();
+			})
 			.catch(error => console.log(error));
-	}, []);
+	}
 
-	const classes = useStyles();
-	const [perf, setPerf] = useState();
+	handleFilterPredictions(number) {
+		return this.state.data.filter(item => item.nb_classes_predicted === number)
+			.length;
+	}
 
-	return (
-		<div className={classes.root}>
-			<Paper className={classes.paper}>
-				<Toolbar>
-					<div className={classes.title}>
-						<Typography color='inherit' variant='subtitle1'>
-							Focus Class Predicted
-						</Typography>
+	handleGetClassesNumber() {
+		let result = [];
 
-						<div className={classes.spacer} />
-					</div>
-				</Toolbar>
-				<Bubble
-					data={{
-						labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
-						data: [],
-						backgroundColor: [
-							'rgba(255, 99, 132)',
-							'rgba(54, 162, 235)',
-							'rgba(255, 206, 86)',
-							'rgba(255, 206, 86)'
-						],
-						borderColor: [
-							'rgba(255, 99, 132, 1)',
-							'rgba(54, 162, 235, 1)',
-							'rgba(255, 206, 86, 1)'
-						],
-						borderWidth: 1
-					}}
-				/>
-			</Paper>
-		</div>
-	);
+		for (let i = 0; i < 9; i++) {
+			const count = this.handleFilterPredictions(i);
+			result.push(count);
+		}
+		this.setState({ dataCount: [...result] });
+	}
+
+	render() {
+		const { classes } = this.props;
+		const { dataCount } = this.state;
+		console.log(dataCount);
+
+		return (
+			<div className={classes.root}>
+				<Paper className={classes.paper} elevation={0}>
+					<Toolbar>
+						<div className={classes.title}>
+							<Typography color='inherit' variant='subtitle1'>
+								Focus Class Predicted Global
+							</Typography>
+						</div>
+					</Toolbar>
+					<Bar
+						data={{
+							labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
+							datasets: [
+								{
+									label: '# Nbr invoice by classes predicted',
+									data: dataCount,
+									backgroundColor: [
+										'rgba(255, 206, 86)',
+										'rgba(255, 206, 86)',
+										'rgba(255, 206, 86)',
+										'rgba(255, 206, 86)',
+										'rgba(255, 206, 86)',
+										'rgba(51, 153, 51)',
+										'rgba(51, 153, 51)',
+										'rgba(51, 153, 51)',
+										'rgba(51, 153, 51)'
+									],
+									borderColor: [
+										'rgba(255, 206, 86, 1)',
+										'rgba(255, 206, 86, 1)',
+										'rgba(255, 206, 86, 1)',
+										'rgba(255, 206, 86, 1)',
+										'rgba(255, 206, 86, 1)',
+										'rgba(51, 153, 51, 1)',
+										'rgba(51, 153, 51, 1)',
+										'rgba(51, 153, 51, 1)',
+										'rgba(51, 153, 51, 1)'
+									],
+									borderWidth: 1
+								}
+							]
+						}}
+					/>
+				</Paper>
+			</div>
+		);
+	}
 }
+
+export default withStyles(styles)(ClassCountPredicted);

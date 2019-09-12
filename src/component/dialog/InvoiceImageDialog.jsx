@@ -24,12 +24,9 @@ class InvoiceImageDialog extends React.Component {
 		originalFileName: ''
 	};
 
-	componentWillMount() {
+	componentDidMount() {
 		const { id } = this.props;
-		this.setState({
-			...this.state,
-			isLoding: true
-		});
+		this.setState({ isLoding: true });
 		axios
 			.get(`/api/report/filename/${id}`)
 			.then(response => {
@@ -40,7 +37,7 @@ class InvoiceImageDialog extends React.Component {
 	}
 
 	componentWillUnmount() {
-		this.setState({isLoding: false, originalFileName: ''})
+		this.setState({ isLoding: false, originalFileName: '' });
 	}
 
 	render() {
@@ -49,22 +46,25 @@ class InvoiceImageDialog extends React.Component {
 
 		return (
 			<>
-				<div className=''>
-					<DialogTitle disableTypography>
-						<Typography variant='h6'>{originalFileName}</Typography>
-						<IconButton
-							aria-label='close'
-							className={classes.closeButton}
-							onClick={onClose}
-						>
-							<CloseIcon />
-						</IconButton>
-					</DialogTitle>
+				<DialogTitle disableTypography>
+					<Typography variant='h6'>{originalFileName}</Typography>
+					<IconButton
+						aria-label='close'
+						className={classes.closeButton}
+						onClick={onClose}
+					>
+						<CloseIcon />
+					</IconButton>
+				</DialogTitle>
 
-					<DialogContent dividers>
-						<img src={`/image/${originalFileName}`} alt='' width='1200' height='auto' />
-					</DialogContent>
-				</div>
+				<DialogContent dividers>
+					<img
+						src={`/image/${originalFileName}`}
+						alt=''
+						width='1200'
+						height='auto'
+					/>
+				</DialogContent>
 			</>
 		);
 	}
