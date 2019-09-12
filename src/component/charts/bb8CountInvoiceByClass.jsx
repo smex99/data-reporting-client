@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
 import { Paper, Toolbar, Typography } from '@material-ui/core';
@@ -25,7 +25,7 @@ const styles = theme => ({
 	}
 });
 
-class ClassCountPredicted extends React.Component {
+class B88CountInvoiceByClass extends Component {
 	state = {
 		data: [],
 		dataCount: []
@@ -33,26 +33,33 @@ class ClassCountPredicted extends React.Component {
 
 	componentDidMount() {
 		axios
-			.get('/api/report/count')
+			.get('/api/bb8')
 			.then(response => {
-				this.setState({ data: response.data });
-				this.handleGetClassesNumber();
+				let result = response.data.map(data => ({
+					_id: data._id,
+					invoice_id: data.invoice_id,
+					metrics: data.metrics,
+					model_id: data.model_id,
+					predictions: data.predictions.length
+				}));
+				this.setState({ data: result });
+				this.handleGetInvoiceNumberByClass();
 			})
 			.catch(error => console.log(error));
 	}
 
-	handleFilterPredictions(number) {
-		return this.state.data.filter(item => item.nb_classes_predicted === number)
-			.length;
+	handleFilterPredictionsByClassNumber(number) {
+		return this.state.data.filter(item => item.predictions === number).length;
 	}
 
-	handleGetClassesNumber() {
+	handleGetInvoiceNumberByClass() {
 		let result = [];
 
-		for (let i = 0; i < 9; i++) {
-			const count = this.handleFilterPredictions(i);
+		for (let i = 0; i < 12; i++) {
+			const count = this.handleFilterPredictionsByClassNumber(i);
 			result.push(count);
 		}
+
 		this.setState({ dataCount: result });
 	}
 
@@ -66,13 +73,27 @@ class ClassCountPredicted extends React.Component {
 					<Toolbar>
 						<div className={classes.title}>
 							<Typography variant='subtitle1'>
-								Focus Invoice Count By Class
+								BB8 Invoice Count By Class
 							</Typography>
 						</div>
 					</Toolbar>
+
 					<Bar
 						data={{
-							labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
+							labels: [
+								'0',
+								'1',
+								'2',
+								'3',
+								'4',
+								'5',
+								'6',
+								'7',
+								'8',
+								'9',
+								'10',
+								'11'
+							],
 							datasets: [
 								{
 									label: '# Nbr invoice by class',
@@ -86,6 +107,9 @@ class ClassCountPredicted extends React.Component {
 										'rgba(51, 153, 51)',
 										'rgba(51, 153, 51)',
 										'rgba(51, 153, 51)',
+										'rgba(51, 153, 51)',
+										'rgba(51, 153, 51)',
+										'rgba(51, 153, 51)',
 										'rgba(51, 153, 51)'
 									],
 									borderColor: [
@@ -94,6 +118,9 @@ class ClassCountPredicted extends React.Component {
 										'rgba(255, 206, 86, 1)',
 										'rgba(255, 206, 86, 1)',
 										'rgba(255, 206, 86, 1)',
+										'rgba(51, 153, 51, 1)',
+										'rgba(51, 153, 51, 1)',
+										'rgba(51, 153, 51, 1)',
 										'rgba(51, 153, 51, 1)',
 										'rgba(51, 153, 51, 1)',
 										'rgba(51, 153, 51, 1)',
@@ -110,4 +137,4 @@ class ClassCountPredicted extends React.Component {
 	}
 }
 
-export default withStyles(styles)(ClassCountPredicted);
+export default withStyles(styles)(B88CountInvoiceByClass);
